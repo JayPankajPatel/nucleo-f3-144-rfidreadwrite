@@ -61,6 +61,8 @@ void Error_Handler(void);
 #define USER_Btn_GPIO_Port GPIOC
 #define MCO_Pin GPIO_PIN_0
 #define MCO_GPIO_Port GPIOF
+#define SP1_SS_RC552_Pin GPIO_PIN_0
+#define SP1_SS_RC552_GPIO_Port GPIOA
 #define LD1_Pin GPIO_PIN_0
 #define LD1_GPIO_Port GPIOB
 #define LD3_Pin GPIO_PIN_14
@@ -81,8 +83,12 @@ void Error_Handler(void);
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
 #define TCK_GPIO_Port GPIOA
-#define SWO_Pin GPIO_PIN_3
-#define SWO_GPIO_Port GPIOB
+#define SP1_SCK_RC552_Pin GPIO_PIN_3
+#define SP1_SCK_RC552_GPIO_Port GPIOB
+#define SP1_MISO_RC552_Pin GPIO_PIN_4
+#define SP1_MISO_RC552_GPIO_Port GPIOB
+#define SP1_MOSI_RC552_Pin GPIO_PIN_5
+#define SP1_MOSI_RC552_GPIO_Port GPIOB
 #define LD2_Pin GPIO_PIN_7
 #define LD2_GPIO_Port GPIOB
 
