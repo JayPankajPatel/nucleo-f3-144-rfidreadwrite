@@ -22,7 +22,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "usbd_cdc_if.h"
+#include "string.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -98,13 +99,23 @@ int main(void)
   MX_SPI1_Init();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
-
+  HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_6);
+  char txtBuf[8];
+  uint8_t count = 1;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  sprintf(txtBuf, "%u\r\n", count);
+
+	  if(count > 100)
+		  count = 1;
+	  count++;
+
+	  CDC_Transmit_FS((uint8_t*)txtBuf, strlen(txtBuf));
+	  HAL_Delay(100);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
