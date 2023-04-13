@@ -23,7 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc_if.h"
-#include "string.h"
+#include "RC522.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -38,7 +38,7 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+#define VirCOMPrint(buf, len) CDC_Transmit_FS(buf, len)
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -99,22 +99,22 @@ int main(void)
   MX_SPI1_Init();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
-  HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_6);
-  char txtBuf[8];
-  uint8_t count = 1;
+  HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_6); // Turns on Micro USB Port CN13 for Data Transmission
+  	  	  	  	  	  	  	  	  	  	 // Unique step for usage of STM32F MCU USB Virtual COMPORT
+  	  	  	  	  	  	  	  	  	     // as stated on p.24 Sec.6.9 in UM1974 User manual
+  char txtBuf[8];						 // outputed to COMPORT
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  sprintf(txtBuf, "%u\r\n", count);
 
-	  if(count > 100)
-		  count = 1;
-	  count++;
+	  uint8_t data = 0;
+	  RC522_SPI_read(0x37 << 2, &data);
 
-	  CDC_Transmit_FS((uint8_t*)txtBuf, strlen(txtBuf));
 	  HAL_Delay(100);
     /* USER CODE END WHILE */
 
