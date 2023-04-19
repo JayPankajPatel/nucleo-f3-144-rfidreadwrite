@@ -100,7 +100,7 @@ int main(void)
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
   HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_6); // Turns on Micro USB Port CN13 for Data Transmission
-  	  	  	  	  	  	  	  	  	  	 // Unique step for usage of STM32F MCU USB Virtual COMPORT
+  	  	  	  	  	  	  	  	  	  	 // Unique step for usage of STM32F303ZE Nucleo Board USB Virtual COMPORT
   	  	  	  	  	  	  	  	  	     // as stated on p.24 Sec.6.9 in UM1974 User manual
   char txtBuf[8];						 // outputed to COMPORT
 
@@ -112,8 +112,7 @@ int main(void)
   while (1)
   {
 
-	  uint8_t data = 0;
-	  data = RC522_SPI_read_transmit_recieve(GENRANDID, &data);
+
 
 	  HAL_Delay(100);
     /* USER CODE END WHILE */

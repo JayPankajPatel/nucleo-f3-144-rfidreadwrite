@@ -29,6 +29,7 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f3xx_hal.h"
 
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -46,7 +47,6 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
@@ -93,7 +93,10 @@ void Error_Handler(void);
 #define LD2_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-
+#define DEBUG_LOG 1
+#ifdef DEBUG_LOG
+	#define VirCOMPrint(buf, len) CDC_Transmit_FS(buf, len)
+#endif /* DEBUG LOG */
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

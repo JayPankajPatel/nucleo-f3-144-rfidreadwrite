@@ -6,14 +6,14 @@
  */
 
 #include "RC522.h"
-#include "main.h"
+#include <strings.h>
 
-extern hspi1;
 
-uint8_t RC522_SPI_read_transmit_recieve(uint8_t addr, uint8_t* data)
+
+uint8_t RC522_SPI_read(uint8_t reg_addr, uint8_t* read_data)
 {
 	uint8_t rx_bits;
-	uint8_t read_addr = ((addr << 1) & 0x7E) | 0x80; //8.1.2.3 Table 8
+	uint8_t read_addr = ((reg_addr << 1) & 0x7E) | 0x80; //8.1.2.3 Table 8
 	uint8_t status;
 
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, RESET); 	 // Bring NSS Low to begin transaction.
@@ -23,15 +23,33 @@ uint8_t RC522_SPI_read_transmit_recieve(uint8_t addr, uint8_t* data)
 																   	   	   	   	   	   	   	   	   // 1 is refering to 1 byte
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, SET);       // Bring NSS High to end transaction.
 
-	data = rx_bits;
+	*read_data = rx_bits;
+
+#ifdef DEBUG_LOG
+	char* message;
+	uint16_t size;
+	if(status)
+	{
+		message = "Successful SPI Read Operation";
+		size = strlen(message);
+		VirCOMPrint((uint8_t*)message, size);
+	}
+	else
+	{
+		message = "Not Successful SPI Read Operation";
+		size = strlen(message);
+		VirCOMPrint((uint8_t*)message, size);
+	}
+#endif /* DEBUG_LOG */
+
 
 	return status;
 
 }
 
-uint8_t RC522_SPI_write(uint8_t addr, uint8_t write_val)
+uint8_t RC522_SPI_write(uint8_t reg_addr, uint8_t write_data)
 {
-	uint8_t write_addr = ((addr << 1) & 0x7E);
+	uint8_t write_addr = ((reg_addr << 1) & 0x7E);
 
 	uint8_t status;
 
@@ -40,14 +58,41 @@ uint8_t RC522_SPI_write(uint8_t addr, uint8_t write_val)
 	status = (HAL_SPI_Transmit(&hspi1, &write_addr, 1, HAL_MAX_DELAY)) == HAL_OK;// Size param is set in initialization
 	   	   	       	   	   	   	   	   	   	   	   	   	   						 // in this case its : hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
 	   	   	   	   	   	   	   	   	   	   	   	   	   	    				     // 1 is refering to 1 byte
-	status &= (HAL_SPI_Transmit(&hspi1, &write_val, 1, HAL_MAX_DELAY)) == HAL_OK;
+	status = (HAL_SPI_Transmit(&hspi1, &write_data, 1, HAL_MAX_DELAY)) == HAL_OK;
 
 	// 8.1.2.2, first bit read in is don't care as it sends a bit config to read data, reading starts at byte 1
 
 
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, SET);		 // Bring NSS High to end transaction.
 
+
+#ifdef DEBUG_LOG
+	char* message;
+	uint16_t size;
+	if(status)
+	{
+		message = "Successful SPI Write Operation\n";
+		size = strlen(message);
+		VirCOMPrint((uint8_t*)message, size);
+	}
+	else
+	{
+		message = "Not Successful SPI Write Operation\n";
+		size = strlen(message);
+		VirCOMPrint((uint8_t*)message, size);
+	}
+#endif /* DEBUG_LOG */
+
 	return status;
+
+}
+
+void clear_bitmask(uint8_t reg_addr, uint8_t mask)
+{
+	RC522_SPI_write(reg_addr, write_data)
+}
+void set_bitmask(uint8_t reg_addr, uint8_t mask)
+{
 
 }
 
